@@ -1,0 +1,25 @@
+version: '3'
+services:
+  db:
+    image: daocloud.io/library/mysql:5.7.4
+    environment:
+      # TZ: 'Asia/Shanghai'
+      MYSQL_ROOT_PASSWORD: '666666'
+      MYSQL_DATABASE: ‘login’
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./db:/var/lib/mysql
+      # - ./db/config:/usr/local/mysql
+
+  hxl-login-django:
+    image: hxl-docker-pro-login:latest
+    # build: .
+    depends_on:
+    - db
+    ports:
+      - 80:8000
+    volumes:
+      - ./docker-hxl-login-demo/mysite_login:/usr/src/app/docker-hxl-login-demo/mysite_login
+    command: python manage.py runserver 0.0.0.0:8000
